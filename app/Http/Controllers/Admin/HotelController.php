@@ -1,0 +1,117 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreHotelRequest;
+use App\Http\Requests\UpdateHotelRequest;
+use App\Models\Hotel;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+class HotelController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!auth()->check() || !auth()->user()->isAdmin()) {
+                abort(403);
+            }
+            return $next($request);
+        });
+    }
+
+    /**
+     * Display a listing of hotels for admin.
+     */
+    public function index(Request $request)
+    {
+        $query = Hotel::query();
+
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ILIKE', "%{$search}%")
+                  ->orWhere('city', 'ILIKE', "%{$search}%")
+                  ->orWhere('country', 'ILIKE', "%{$search}%");
+            });
+        }
+
+        $hotels = $query->orderBy('created_at', 'desc')->paginate(15);
+
+        return Inertia::render('Admin/Hotels/Index', [
+            'hotels' => $hotels,
+            'filters' => $request->only(['search']),
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new hotel.
+     */
+    public function create()
+    {
+        return Inertia::render('Admin/Hotels/Create');
+    }
+
+    /**
+     * Store a newly created hotel.
+     */
+    public function store(StoreHotelRequest $request)
+    {
+        Hotel::create($request->validated());
+
+        return redirect()->route('admin.hotels.index')
+            ->with('success', 'Hotel created successfully.');
+    }
+
+    /**
+     * Display the specified hotel.
+     */
+    public function show(Hotel $hotel)
+    {
+        $hotel->load('bookings.user');
+        
+        return Inertia::render('Admin/Hotels/Show', [
+            'hotel' => $hotel,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified hotel.
+     */
+    public function edit(Hotel $hotel)
+    {
+        return Inertia::render('Admin/Hotels/Edit', [
+            'hotel' => $hotel,
+        ]);
+    }
+
+    /**
+     * Update the specified hotel.
+     */
+    public function update(UpdateHotelRequest $request, Hotel $hotel)
+    {
+        $hotel->update($request->validated());
+
+        return redirect()->route('admin.hotels.index')
+            ->with('success', 'Hotel updated successfully.');
+    }
+
+    /**
+     * Remove the specified hotel.
+     */
+    public function destroy(Hotel $hotel)
+    {
+        // Check if hotel has active bookings
+        $activeBookings = $hotel->bookings()->active()->count();
+        
+        if ($activeBookings > 0) {
+            return back()->with('error', 'Cannot delete hotel with active bookings.');
+        }
+
+        $hotel->delete();
+
+        return redirect()->route('admin.hotels.index')
+            ->with('success', 'Hotel deleted successfully.');
+    }
+}
