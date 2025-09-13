@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import GuestLayout from '@/Layouts/GuestLayout';
@@ -7,9 +7,12 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 
-export default function Create({ auth, hotel, checkIn, checkOut }) {
+export default function Create({ auth, hotel, checkIn, checkOut, totalPrice: initialTotalPrice }) {
     const [nights, setNights] = useState(0);
-    const [totalPrice, setTotalPrice] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(parseFloat(initialTotalPrice) || 0);
+
+    console.log('initialTotalPrice:', initialTotalPrice);
+    console.log('totalPrice state:', totalPrice);
 
     const { data, setData, post, processing, errors } = useForm({
         hotel_id: hotel.id,
@@ -37,6 +40,13 @@ export default function Create({ auth, hotel, checkIn, checkOut }) {
             }
         }
     };
+
+    // Calculate nights and total price initially if checkIn and checkOut are provided
+    useEffect(() => {
+        if (checkIn && checkOut) {
+            calculateNights(checkIn, checkOut);
+        }
+    }, [checkIn, checkOut]);
 
     const handleCheckInChange = (e) => {
         const value = e.target.value;
@@ -195,7 +205,7 @@ export default function Create({ auth, hotel, checkIn, checkOut }) {
                                                 className="ms-4" 
                                                 disabled={processing || nights <= 0}
                                             >
-                                                {processing ? 'Processing...' : `Book Now - $${totalPrice.toFixed(2)}`}
+                                                {processing ? 'Processing...' : `Book Now - ${totalPrice.toFixed(2)}`}
                                             </PrimaryButton>
                                         </div>
                                     </form>

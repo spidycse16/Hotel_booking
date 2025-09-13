@@ -119,11 +119,12 @@ export default function Index({ auth, hotels, filters }) {
                             </form>
 
                             {/* Hotels Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {hotels.data.map((hotel) => (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                                {hotels.data.map((hotel) => {
+                                    return (
                                     <div key={hotel.id} className="bg-white border rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                                         <div className="h-48 bg-gray-200">
-                                            {hotel.first_image ? (
+                                            {typeof hotel.first_image === 'string' && hotel.first_image ? (
                                                 <img
                                                     src={hotel.first_image}
                                                     alt={hotel.name}
@@ -137,29 +138,45 @@ export default function Index({ auth, hotels, filters }) {
                                         </div>
                                         <div className="p-4">
                                             <h3 className="text-lg font-semibold mb-2">{hotel.name}</h3>
-                                            <p className="text-gray-600 text-sm mb-2">{hotel.full_location}</p>
+                                            <p className="text-gray-600 text-sm mb-2">{hotel.full_location ?? 'N/A'}</p>
                                             <p className="text-gray-700 text-sm mb-3 line-clamp-2">{hotel.description}</p>
                                             <div className="flex justify-between items-center">
                                                 <span className="text-2xl font-bold text-indigo-600">
                                                     ${hotel.price}
                                                     <span className="text-sm text-gray-500">/night</span>
                                                 </span>
-                                                <Link
-                                                    href={route('hotels.show', hotel.id)}
-                                                    className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
-                                                >
-                                                    View Details
-                                                </Link>
+                                                <div className="flex space-x-2">
+                                                    <Link
+                                                        href={route('hotels.show', hotel.id)}
+                                                        className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
+                                                    >
+                                                        View Details
+                                                    </Link>
+                                                    <Link
+                                                        href={route('bookings.create', { hotel_id: hotel.id })}
+                                                        className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
+                                                    >
+                                                        Book Now
+                                                    </Link>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                ))}
+                                );
+                                })}
                             </div>
 
                             {/* Pagination */}
-                            {hotels.links && (
-                                <div className="mt-8">
-                                    {/* Add pagination component here */}
+                            {hotels.links && hotels.links.length > 3 && (
+                                <div className="flex justify-center mt-8">
+                                    {hotels.links.map((link, index) => (
+                                        <Link
+                                            key={index}
+                                            href={link.url}
+                                            className={`px-3 py-2 mx-1 rounded-md ${link.active ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'} ${!link.url ? 'cursor-not-allowed opacity-50' : ''}`}
+                                            dangerouslySetInnerHTML={{ __html: link.label }}
+                                        />
+                                    ))}
                                 </div>
                             )}
 

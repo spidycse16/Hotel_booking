@@ -41,6 +41,7 @@ class BookingController extends Controller
             'hotel' => $hotel,
             'checkIn' => $request->get('check_in'),
             'checkOut' => $request->get('check_out'),
+            'totalPrice' => $request->get('total_price'),
         ]);
     }
 

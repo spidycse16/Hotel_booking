@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateHotelRequest;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class HotelController extends Controller
 {
@@ -54,7 +55,18 @@ class HotelController extends Controller
      */
     public function store(StoreHotelRequest $request)
     {
-        Hotel::create($request->validated());
+        $data = $request->validated();
+
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('hotels', 'public');
+                $imagePaths[] = '/storage/' . $path;
+            }
+        }
+        $data['images'] = $imagePaths;
+
+        Hotel::create($data);
 
         return redirect()->route('admin.hotels.index')
             ->with('success', 'Hotel created successfully.');
@@ -87,7 +99,18 @@ class HotelController extends Controller
      */
     public function update(UpdateHotelRequest $request, Hotel $hotel)
     {
-        $hotel->update($request->validated());
+        $data = $request->validated();
+
+        $imagePaths = $hotel->images ?? [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('hotels', 'public');
+                $imagePaths[] = '/storage/' . $path;
+            }
+        }
+        $data['images'] = $imagePaths;
+
+        $hotel->update($data);
 
         return redirect()->route('admin.hotels.index')
             ->with('success', 'Hotel updated successfully.');
