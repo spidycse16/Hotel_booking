@@ -9,6 +9,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\PaymentController;
+
 // Home page - redirect to hotels listing
 Route::get('/', function () {
     return redirect()->route('hotels.index');
@@ -23,6 +25,9 @@ Route::get('/bookings/create', [BookingController::class, 'create'])->name('book
 Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
 Route::get('/bookings/{bookingReference}', [BookingController::class, 'show'])->name('bookings.show');
 
+// Stripe payment routes
+Route::get('/payment/checkout-session', [PaymentController::class, 'createCheckoutSession'])->name('payment.checkout-session');
+Route::post('/stripe/webhook', [\App\Http\Controllers\StripeWebhookController::class, 'handle']);
 // Authenticated user routes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {

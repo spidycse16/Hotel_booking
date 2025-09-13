@@ -79,10 +79,12 @@ class BookingController extends Controller
 
         $booking = Booking::create($bookingData);
 
-        // TODO: Send confirmation email
+        $checkout_session = (new PaymentController)->createCheckoutSession(new Request([
+            'booking_id' => $booking->id,
+            'hotel_id' => $hotel->id,
+        ]));
 
-        return redirect()->route('bookings.show', $booking->booking_reference)
-            ->with('success', 'Booking created successfully!');
+        return Inertia::location($checkout_session->url);
     }
 
     /**
