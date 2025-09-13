@@ -7,9 +7,12 @@ import { useState } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
+    console.log('User object:', user);
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
+
+    const isAdminOrSuperAdmin = user && (user.role_id === 1 || user.role_id === 2);
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -36,7 +39,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     My Bookings
                                 </NavLink>
-                                {user.role === 'admin' && (
+                                {isAdminOrSuperAdmin && (
                                     <NavLink
                                         href={route('admin.dashboard')}
                                         active={route().current('admin.*')}

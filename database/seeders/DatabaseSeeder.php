@@ -17,12 +17,14 @@ class DatabaseSeeder extends Seeder
         \DB::statement('TRUNCATE TABLE users, roles RESTART IDENTITY CASCADE');
 
         $this->call(RoleSeeder::class);
+        $this->call(AssignDefaultRoleToUsersSeeder::class);
 
         // Create a superadmin user
+        $superadminRole = \App\Models\Role::where('name', 'superadmin')->first();
         User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'superadmin@example.com',
-            'role' => 'superadmin',
+            'role_id' => $superadminRole->id,
         ]);
 
         // Seed hotels

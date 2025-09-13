@@ -9,15 +9,11 @@ use Inertia\Inertia;
 
 class BookingController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (!auth()->check() || !auth()->user()->isAdmin()) {
-                abort(403);
-            }
-            return $next($request);
-        });
-    }
+    protected $middleware = [
+        'auth',
+        'verified',
+        'can:manage-hotels', // Custom middleware to check admin/superadmin role
+    ];
 
     /**
      * Display a listing of all bookings for admin.
