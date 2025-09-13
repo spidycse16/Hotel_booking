@@ -26,6 +26,8 @@ class Hotel extends Model
         'is_active' => 'boolean',
     ];
 
+    protected $appends = ['full_location', 'first_image'];
+
     /**
      * Get the bookings for the hotel.
      */
@@ -59,7 +61,7 @@ class Hotel extends Model
      */
     public function shouldBeSearchable(): bool
     {
-        return $this->is_active;
+        return (bool) $this->is_active;
     }
 
     /**

@@ -7,6 +7,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "algolia/algoliasearch-client-php": "^4.28",
+        "doctrine/dbal": "^4.3",
         "elasticsearch/elasticsearch": "^9.1",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/breeze": "^2.3",
@@ -14,6 +16,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/scout": "^10.19",
         "laravel/tinker": "^2.10.1",
+        "stripe/stripe-php": "^17.6",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {

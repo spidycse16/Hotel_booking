@@ -73,10 +73,59 @@ class HotelSeeder extends Seeder
                 ],
                 'is_active' => true,
             ],
+            [
+                'name' => 'Rainforest Retreat',
+                'description' => 'An eco-lodge nestled in the heart of the rainforest, perfect for nature enthusiasts.',
+                'city' => 'Costa Rica',
+                'country' => 'Costa Rica',
+                'price' => 179.99,
+                'images' => [
+                    'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800',
+                    'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800'
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => 'The Grand Budapest Hotel',
+                'description' => 'A historic hotel with a rich past and a vibrant present, offering a unique and memorable stay.',
+                'city' => 'Budapest',
+                'country' => 'Hungary',
+                'price' => 249.99,
+                'images' => [
+                    'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+                    'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800'
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => 'The Ritz Carlton',
+                'description' => 'A luxurious hotel with a reputation for excellence, offering a truly five-star experience.',
+                'city' => 'Paris',
+                'country' => 'France',
+                'price' => 499.99,
+                'images' => [
+                    'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800',
+                    'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800'
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => 'The Plaza',
+                'description' => 'A New York icon, offering a timeless and elegant experience in the heart of the city.',
+                'city' => 'New York',
+                'country' => 'USA',
+                'price' => 599.99,
+                'images' => [
+                    'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800',
+                    'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800'
+                ],
+                'is_active' => true,
+            ],
         ];
 
         foreach ($hotels as $hotel) {
             \App\Models\Hotel::create($hotel);
         }
+
     }
 }

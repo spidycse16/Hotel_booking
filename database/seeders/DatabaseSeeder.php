@@ -13,18 +13,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user
-        User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'role' => 'admin',
-        ]);
+        // Truncate tables
+        \DB::statement('TRUNCATE TABLE users, roles RESTART IDENTITY CASCADE');
 
-        // Create regular test user
+        $this->call(RoleSeeder::class);
+        $this->call(AssignDefaultRoleToUsersSeeder::class);
+
+        // Create a superadmin user
+        $superadminRole = \App\Models\Role::where('name', 'superadmin')->first();
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'role' => 'user',
+            'name' => 'Super Admin',
+            'email' => 'superadmin@example.com',
+            'role_id' => $superadminRole->id,
         ]);
 
         // Seed hotels

@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Role;
 
 class User extends Authenticatable
 {
@@ -21,30 +22,27 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
+        'role_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    public function role()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(Role::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role->name === 'admin' || $this->role->name === 'superadmin';
+    }
+
+    public function isUser(): bool
+    {
+        return $this->role->name === 'user';
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role->name === 'superadmin';
     }
 
     /**
@@ -53,21 +51,5 @@ class User extends Authenticatable
     public function bookings()
     {
         return $this->hasMany(Booking::class);
-    }
-
-    /**
-     * Check if the user is an admin.
-     */
-    public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
-
-    /**
-     * Check if the user is a regular user.
-     */
-    public function isUser(): bool
-    {
-        return $this->role === 'user' || is_null($this->role);
     }
 }

@@ -10,10 +10,17 @@ export default function Show({ auth, hotel }) {
     const Layout = auth.user ? AuthenticatedLayout : GuestLayout;
 
     const handleBookNow = () => {
+        const checkInDate = new Date(checkIn);
+        const checkOutDate = new Date(checkOut);
+        const diffTime = Math.abs(checkOutDate - checkInDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const totalPrice = (hotel.price * diffDays).toString();
+
         const params = new URLSearchParams({
             hotel_id: hotel.id,
             check_in: checkIn,
             check_out: checkOut,
+            total_price: totalPrice,
         });
         
         window.location.href = `/bookings/create?${params.toString()}`;
