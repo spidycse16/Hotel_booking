@@ -24,17 +24,17 @@ export default function Index({ auth, bookings }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {bookings.data.map(({ id, hotel, user, status }) => (
-                                        <tr key={id}>
-                                            <td className="border px-4 py-2">{id}</td>
-                                            <td className="border px-4 py-2">{hotel.name}</td>
-                                            <td className="border px-4 py-2">{user.name}</td>
-                                            <td className="border px-4 py-2">{status}</td>
+                                    {bookings.data.map((booking) => (
+                                        <tr key={booking.id}>
+                                            <td className="border px-4 py-2">{booking.id}</td>
+                                            <td className="border px-4 py-2">{booking.hotel ? booking.hotel.name : 'Hotel not available'}</td>
+                                            <td className="border px-4 py-2">{booking.user ? booking.user.name : booking.guest_name}</td>
+                                            <td className="border px-4 py-2">{booking.status}</td>
                                             <td className="border px-4 py-2">
                                                 <Link
                                                     tabIndex="1"
                                                     className="px-4 py-2 text-sm text-white bg-blue-500 rounded"
-                                                    href={route("admin.bookings.show", id)}
+                                                    href={route("admin.bookings.show", booking.id)}
                                                 >
                                                     View
                                                 </Link>
