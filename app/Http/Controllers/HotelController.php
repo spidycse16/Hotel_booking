@@ -55,6 +55,7 @@ class HotelController extends Controller
         return Inertia::render('Hotels/Index', [
             'hotels' => $hotels,
             'filters' => $request->only(['search', 'city', 'country', 'min_price', 'max_price']),
+            'exchangeRates' => config('currency.exchange_rates'),
         ]);
     }
 
@@ -69,6 +70,7 @@ class HotelController extends Controller
 
         return Inertia::render('Hotels/Show', [
             'hotel' => $hotel,
+            'exchangeRates' => config('currency.exchange_rates'),
         ]);
     }
 }
