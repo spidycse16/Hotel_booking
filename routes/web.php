@@ -45,7 +45,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // Admin routes
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'verified', 'can:manage-hotels'])->prefix('admin')->name('admin.')->group(function () {
     // Admin dashboard
     Route::get('/', function () {
         return Inertia::render('Admin/Dashboard');
