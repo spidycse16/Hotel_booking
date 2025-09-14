@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import CurrencyConverter from '@/Components/CurrencyConverter';
 import { Head, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import GuestLayout from '@/Layouts/GuestLayout';
@@ -77,11 +78,13 @@ export default function Show({ auth, hotel }) {
                                     <h1 className="text-3xl font-bold mb-2">{hotel.name}</h1>
                                     <p className="text-lg text-gray-600 mb-4">{hotel.full_location}</p>
                                     
-                                    <div className="mb-6">
+
+                                    <div className="mb-6 flex items-center space-x-4">
                                         <span className="text-3xl font-bold text-indigo-600">
                                             ${hotel.price}
                                         </span>
-                                        <span className="text-lg text-gray-500 ml-2">per night</span>
+                                        <span className="text-lg text-gray-500">per night</span>
+                                        <CurrencyConverter baseAmount={hotel.price} baseCurrency="USD" />
                                     </div>
 
                                     <div className="mb-6">
